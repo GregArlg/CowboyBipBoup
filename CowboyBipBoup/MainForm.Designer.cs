@@ -28,12 +28,41 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form1";
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            SpikePic = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)SpikePic).BeginInit();
+            SuspendLayout();
+            // 
+            // SpikePic
+            // 
+            SpikePic.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            SpikePic.Image = Properties.Resources.SpikeNeg;
+            SpikePic.ImageLocation = "";
+            SpikePic.Location = new Point(495, 62);
+            SpikePic.Name = "SpikePic";
+            SpikePic.Size = new Size(170, 170);
+            SpikePic.SizeMode = PictureBoxSizeMode.StretchImage;
+            SpikePic.TabIndex = 0;
+            SpikePic.TabStop = false;
+            // 
+            // MainForm
+            // 
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.Black;
+            ClientSize = new Size(663, 231);
+            Controls.Add(SpikePic);
+            ForeColor = Color.White;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            Name = "MainForm";
+            Text = "CowboyBipBoup";
+            ((System.ComponentModel.ISupportInitialize)SpikePic).EndInit();
+            ResumeLayout(false);
         }
 
         #endregion
+
+        private PictureBox SpikePic;
     }
 }

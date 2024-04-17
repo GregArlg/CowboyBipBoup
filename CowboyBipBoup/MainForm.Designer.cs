@@ -30,6 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             SpikePic = new PictureBox();
+            textBox1 = new TextBox();
+            InputLabel = new Label();
+            StartBtn = new Button();
             ((System.ComponentModel.ISupportInitialize)SpikePic).BeginInit();
             SuspendLayout();
             // 
@@ -45,12 +48,42 @@
             SpikePic.TabIndex = 0;
             SpikePic.TabStop = false;
             // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(40, 62);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(386, 27);
+            textBox1.TabIndex = 1;
+            // 
+            // InputLabel
+            // 
+            InputLabel.AutoSize = true;
+            InputLabel.Location = new Point(40, 39);
+            InputLabel.Name = "InputLabel";
+            InputLabel.Size = new Size(65, 20);
+            InputLabel.TabIndex = 2;
+            InputLabel.Text = "CSV File:";
+            // 
+            // StartBtn
+            // 
+            StartBtn.BackColor = Color.FromArgb(64, 64, 64);
+            StartBtn.Font = new Font("Baskerville Old Face", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            StartBtn.Location = new Point(128, 124);
+            StartBtn.Name = "StartBtn";
+            StartBtn.Size = new Size(222, 55);
+            StartBtn.TabIndex = 3;
+            StartBtn.Text = "See you in space, cowboy";
+            StartBtn.UseVisualStyleBackColor = false;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Black;
             ClientSize = new Size(663, 231);
+            Controls.Add(StartBtn);
+            Controls.Add(InputLabel);
+            Controls.Add(textBox1);
             Controls.Add(SpikePic);
             ForeColor = Color.White;
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -59,10 +92,14 @@
             Text = "CowboyBipBoup";
             ((System.ComponentModel.ISupportInitialize)SpikePic).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private PictureBox SpikePic;
+        private TextBox textBox1;
+        private Label InputLabel;
+        private Button StartBtn;
     }
 }

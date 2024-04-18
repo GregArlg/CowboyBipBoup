@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             SpikePic = new PictureBox();
-            textBox1 = new TextBox();
+            InputTextBox = new TextBox();
             InputLabel = new Label();
             StartBtn = new Button();
             ((System.ComponentModel.ISupportInitialize)SpikePic).BeginInit();
@@ -48,12 +48,12 @@
             SpikePic.TabIndex = 0;
             SpikePic.TabStop = false;
             // 
-            // textBox1
+            // InputTextBox
             // 
-            textBox1.Location = new Point(40, 62);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(386, 27);
-            textBox1.TabIndex = 1;
+            InputTextBox.Location = new Point(40, 62);
+            InputTextBox.Name = "InputTextBox";
+            InputTextBox.Size = new Size(386, 27);
+            InputTextBox.TabIndex = 1;
             // 
             // InputLabel
             // 
@@ -62,7 +62,7 @@
             InputLabel.Name = "InputLabel";
             InputLabel.Size = new Size(65, 20);
             InputLabel.TabIndex = 2;
-            InputLabel.Text = "CSV File:";
+            InputLabel.Text = "Xlsx File:";
             // 
             // StartBtn
             // 
@@ -74,6 +74,7 @@
             StartBtn.TabIndex = 3;
             StartBtn.Text = "See you in space, cowboy";
             StartBtn.UseVisualStyleBackColor = false;
+            StartBtn.Click += StartBtn_Click;
             // 
             // MainForm
             // 
@@ -83,7 +84,7 @@
             ClientSize = new Size(663, 231);
             Controls.Add(StartBtn);
             Controls.Add(InputLabel);
-            Controls.Add(textBox1);
+            Controls.Add(InputTextBox);
             Controls.Add(SpikePic);
             ForeColor = Color.White;
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -98,7 +99,7 @@
         #endregion
 
         private PictureBox SpikePic;
-        private TextBox textBox1;
+        private TextBox InputTextBox;
         private Label InputLabel;
         private Button StartBtn;
     }

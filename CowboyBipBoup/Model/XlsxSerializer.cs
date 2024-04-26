@@ -1,4 +1,4 @@
-﻿using IronXL;
+﻿using OfficeOpenXml;
 
 namespace CowboyBipBoup.Model
 {
@@ -11,76 +11,82 @@ namespace CowboyBipBoup.Model
 
             if (File.Exists(xlsxPath))
             {
+                //set nuget license, mandatory according to doc
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
                 //import excel
-                WorkBook excelFile = WorkBook.Load(xlsxPath);
-                excelFile.EvaluateAll();
-
-                //get metadata
-                var metadataSheet = excelFile.WorkSheets[0];
-                string sourcePathCell = "A2";
-                managerCB.SourcePath = metadataSheet[sourcePathCell].StringValue;
-                //string test = metadataSheet["H2"].First().FormattedCellValue;
-
-                if (Directory.Exists(managerCB.SourcePath))
+                using (ExcelPackage package =  new ExcelPackage(xlsxPath))
                 {
-                    //select only folder sheets
-                    var folderSheets = excelFile.WorkSheets.Where(s => s.Name.Contains("Folder"));
+                    ExcelWorkbook excelFile = package.Workbook;
 
-                    //parse folder sheets
-                    foreach (WorkSheet folderSheet in folderSheets)
+                    //get metadata
+                    var metadataSheet = excelFile.Worksheets[0];
+                    string sourcePathCell = "A2";
+                    //managerCB.SourcePath = metadataSheet.Cells[sourcePathCell].Value.ToString();
+                    managerCB.SourcePath = @"D:\Coding\CowboyBipBoup__Backlog\test"; //DEBUG
+
+                    if (Directory.Exists(managerCB.SourcePath))
                     {
-                        //create new folder object
-                        FolderCowboy folderCB = new FolderCowboy();
+                        //select only folder sheets
+                        var folderSheets = excelFile.Worksheets.Where(s => s.Name.Contains("Folder"));
 
-                        //get Date 
-                        folderCB.Date = folderSheet["C2"].StringValue;
-                        //get Place 
-                        folderCB.Place = folderSheet["D2"].StringValue;
-                        //get MonoSte 
-                        folderCB.MonoSte = folderSheet["E2"].StringValue;
-                        //get Recorder 
-                        folderCB.Recorder = folderSheet["F2"].StringValue;
-                        //get Micro 
-                        folderCB.Micro = folderSheet["G2"].StringValue;
-                        //get Format 
-                        folderCB.Format = folderSheet["H2"].StringValue;
-                        //get Library 
-                        folderCB.Library = folderSheet["A2"].StringValue;
-                        //get Project 
-                        folderCB.Project = folderSheet["B2"].StringValue;
-                        //get Note 
-                        folderCB.Note = folderSheet["I2"].StringValue;
-
-                        //get all file rows, from cell 4
-                        var fileRows = folderSheet.Rows.Skip(3);
-                        //parse original files
-                        foreach (RangeRow fileRow in fileRows)
+                        //parse folder sheets
+                        foreach (ExcelWorksheet folderSheet in folderSheets)
                         {
-                            //create file object
-                            FileCowboy fileCB = new FileCowboy();
+                            //create new folder object
+                            FolderCowboy folderCB = new FolderCowboy();
 
-                            //get OriginalName
-                            fileCB.OriginalName = fileRow.Columns[0].First().FormattedCellValue;
-                            //get Category
-                            fileCB.Category = fileRow.Columns[2].First().FormattedCellValue;
-                            //get Desc
-                            fileCB.Desc = fileRow.Columns[3].First().FormattedCellValue;
-                            //get Report
-                            fileCB.Report = fileRow.Columns[1].First().BoolValue;
+                            //get Date 
+                            folderCB.Date = folderSheet.Cells["C2"].Value?.ToString();
+                            //get Place 
+                            folderCB.Place = folderSheet.Cells["D2"].Value?.ToString();
+                            //get MonoSte 
+                            folderCB.MonoSte = folderSheet.Cells["E2"].Value?.ToString();
+                            //get Recorder 
+                            folderCB.Recorder = folderSheet.Cells["F2"].Value?.ToString();
+                            //get Micro 
+                            folderCB.Micro = folderSheet.Cells["G2"].Value?.ToString();
+                            //get Format 
+                            folderCB.Format = folderSheet.Cells["H2"].Value?.ToString();
+                            //get Library 
+                            folderCB.Library = folderSheet.Cells["A2"].Value?.ToString();
+                            //get Project 
+                            folderCB.Project = folderSheet.Cells["B2"].Value?.ToString();
+                            //get Note 
+                            folderCB.Note = folderSheet.Cells["I2"].Value?.ToString();
 
-                            //add file object to folder list
-                            folderCB.FileCowboys.Add(fileCB);
+                            //get all file rows, from cell 4
+                            var fileRows = folderSheet.Rows.Skip(3);
+                            //parse original files
+                            foreach (ExcelRangeRow fileRow in fileRows)
+                            {
+                                //create file object
+                                FileCowboy fileCB = new FileCowboy();
+
+                                //get OriginalName
+                                fileCB.OriginalName = fileRow.Range.GetCellValue<string>(0);
+                                //get Category
+                                fileCB.Category = fileRow.Range.GetCellValue<string>(2) ?? "NOCAT";
+                                //get Desc
+                                fileCB.Desc = fileRow.Range.GetCellValue<string>(3) ?? "NODESC";
+                                //get Report
+                                fileCB.Report = fileRow.Range.GetCellValue<string>(1) == "1";
+                                
+                                //add file object to folder list
+                                folderCB.FileCowboys.Add(fileCB);
+                            }
+
+                            //add folder object to manager list
+                            managerCB.FolderCowboys.Add(folderCB);
                         }
-
-                        //add folder object to manager list
-                        managerCB.FolderCowboys.Add(folderCB);
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Metadata source path doesn't exist.\nSheet: {metadataSheet.Name}\nCell: {sourcePathCell}",
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
-                else
-                {
-                    MessageBox.Show($"Metadata source path doesn't exist.\nSheet: {metadataSheet.Name}\nCell: {sourcePathCell}",
-                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                } 
+                
             }
             else
             {

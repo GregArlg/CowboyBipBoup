@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="IronXL.Excel" Version="2024.4.4" />
+    <PackageReference Include="EPPlus" Version="7.1.2" />
   </ItemGroup>
 
   <ItemGroup>

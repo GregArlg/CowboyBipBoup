@@ -16,6 +16,8 @@ namespace CowboyBipBoup
             if (!string.IsNullOrEmpty(inputPath))
             {
                 var managerCB = XlsxSerializer.GetData(inputPath);
+
+                managerCB.Rename();
             }
             else
             {

@@ -8,6 +8,8 @@ namespace CowboyBipBoup.Model
 {
     public class FolderCowboy
     {
+        public string Name { get; set; } = "NOSHEETNAME";
+
         public string Date { get; set; } = "NODATE";
         public string Place { get; set; } = "NOPLACE";
         public string MonoSte { get; set; } = "NOMONOSTE";

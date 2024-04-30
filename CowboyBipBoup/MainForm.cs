@@ -15,9 +15,14 @@ namespace CowboyBipBoup
 
             if (!string.IsNullOrEmpty(inputPath))
             {
-                var managerCB = XlsxSerializer.GetData(inputPath);
+                ManagerCowboy managerCB;
 
-                managerCB.Rename();
+                bool isDataValid = XlsxSerializer.GetData(inputPath, out managerCB);
+
+                if (isDataValid)
+                {
+                    managerCB.SetFileOutputName(); 
+                }
             }
             else
             {

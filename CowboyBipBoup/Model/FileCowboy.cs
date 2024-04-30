@@ -10,10 +10,13 @@ namespace CowboyBipBoup.Model
 {
     public class FileCowboy
     {
-        public string? OriginalName { get; set; } = null;
+        public string OriginalName { get; set; } = "NOORIGINALNAME";
         public string Category { get; set; } = "NOCAT";
         public string Desc { get; set; } = "NODESC";
-        public bool Report { get; set; } = false;
+
+        // I decided to not keep unwanted files in memory
+        // because we never need them after the serialization
+        //public bool Report { get; set; } = false;
 
         public string Output { get; set; } = string.Empty;
     }

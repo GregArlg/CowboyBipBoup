@@ -21,8 +21,12 @@ namespace CowboyBipBoup
 
                 if (isDataValid)
                 {
-                    managerCB.SetFileOutputName(); 
+                    managerCB.SetFileOutputName();
+
+                    managerCB.Rename();
                 }
+
+                managerCB.Dispose();
             }
             else
             {

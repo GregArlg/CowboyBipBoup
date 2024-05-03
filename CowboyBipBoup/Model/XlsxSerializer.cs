@@ -31,9 +31,11 @@ namespace CowboyBipBoup.Model
                     //get metadata
                     var metadataSheet = excelFile.Worksheets[0];
                     string sourcePathCell = "A2";
-                    //managerCB.SourcePath = metadataSheet.Cells[sourcePathCell].Value.ToString();
-                    managerCB.SourcePath = @"D:\Coding\CowboyBipBoup__Backlog\test"; //DEBUG
-
+                    managerCB.SourcePath = metadataSheet.Cells[sourcePathCell].Value.ToString();
+#if DEBUG
+                    //DEBUG
+                    managerCB.SourcePath = @"D:\Coding\CowboyBipBoup__Backlog\test\a trier"; 
+#endif
                     if (Directory.Exists(managerCB.SourcePath))
                     {
                         //select only folder sheets

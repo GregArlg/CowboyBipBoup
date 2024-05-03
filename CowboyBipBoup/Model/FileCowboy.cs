@@ -8,7 +8,7 @@ using static System.Windows.Forms.DataFormats;
 
 namespace CowboyBipBoup.Model
 {
-    public class FileCowboy
+    public class FileCowboy : IDisposable
     {
         public string OriginalName { get; set; } = "NOORIGINALNAME";
         public string Category { get; set; } = "NOCAT";
@@ -19,5 +19,10 @@ namespace CowboyBipBoup.Model
         //public bool Report { get; set; } = false;
 
         public string Output { get; set; } = string.Empty;
+
+        public void Dispose()
+        {
+            
+        }
     }
 }

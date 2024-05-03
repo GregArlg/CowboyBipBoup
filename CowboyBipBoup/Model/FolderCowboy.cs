@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CowboyBipBoup.Model
 {
-    public class FolderCowboy
+    public class FolderCowboy : IDisposable
     {
         public string Name { get; set; } = "NOSHEETNAME";
 
@@ -21,5 +21,10 @@ namespace CowboyBipBoup.Model
         public string? Note { get; set; } = null;
 
         public List<FileCowboy> FileCowboys { get; set; } = new List<FileCowboy>();
+
+        public void Dispose()
+        {
+            FileCowboys.ForEach(f => f.Dispose());
+        }
     }
 }

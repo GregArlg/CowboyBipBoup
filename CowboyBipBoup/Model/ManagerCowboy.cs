@@ -8,7 +8,7 @@ using static System.Windows.Forms.DataFormats;
 
 namespace CowboyBipBoup.Model
 {
-    public class ManagerCowboy
+    public class ManagerCowboy : IDisposable
     {
         public string? SourcePath { get; set; } = null;
         public List<FolderCowboy> FolderCowboys { get; set; } = new List<FolderCowboy>();
@@ -57,18 +57,18 @@ namespace CowboyBipBoup.Model
                     folder.FileCowboys.ForEach(file =>
                     {
                         //concatenate full file path
-                        string oldPath = Path.Combine(folderFullPath, file.OriginalName, ".wav");
-                        string newPath = Path.Combine(folderFullPath, file.Output, ".wav");
+                        string oldPath = Path.Combine(folderFullPath, file.OriginalName + ".wav");
+                        string newPath = Path.Combine(folderFullPath, file.Output + ".wav");
 
                         if (File.Exists(oldPath))
                         {
                             File.Move(oldPath, newPath);
                         }
-                        else
-                        {
-                            MessageBox.Show($"[ManagerCowboy][Rename]\nFile doesn't exist:\n{oldPath}",
-                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
+                        //else
+                        //{
+                        //    MessageBox.Show($"[ManagerCowboy][Rename]\nFile doesn't exist:\n{oldPath}",
+                        //        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        //}
                     });
                 }); 
             }
@@ -77,6 +77,11 @@ namespace CowboyBipBoup.Model
                 MessageBox.Show($"[ManagerCowboy][Rename]\nSource path doesn't exist.",
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        public void Dispose()
+        {
+            FolderCowboys.ForEach(f => f.Dispose());
         }
     }
 }

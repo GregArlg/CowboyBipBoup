@@ -60,21 +60,35 @@ namespace CowboyBipBoup.Model
                         string oldPath = Path.Combine(folderFullPath, file.OriginalName + ".wav");
                         string newPath = Path.Combine(folderFullPath, file.Output + ".wav");
 
-                        if (File.Exists(oldPath))
+                        int maxNumberOfChar = 256;
+
+                        if (newPath.Length > maxNumberOfChar)
                         {
-                            File.Move(oldPath, newPath);
+                            if (File.Exists(oldPath))
+                            {
+                                File.Move(oldPath, newPath);
+                            }
+                            else
+                            {
+                                MessageBox.Show($"[ManagerCowboy][Rename]\n\n" +
+                                    $"File doesn't exist:\n{oldPath}",
+                                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
                         }
-                        //else
-                        //{
-                        //    MessageBox.Show($"[ManagerCowboy][Rename]\nFile doesn't exist:\n{oldPath}",
-                        //        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        //}
+                        else
+                        {
+                            MessageBox.Show($"[ManagerCowboy][Rename]\n\n" +
+                                $"File name is too long:\n{oldPath}\n\n" +
+                                $"Max number of character: {maxNumberOfChar}",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     });
                 }); 
             }
             else
             {
-                MessageBox.Show($"[ManagerCowboy][Rename]\nSource path doesn't exist.",
+                MessageBox.Show($"[ManagerCowboy][Rename]\n\n" +
+                    $"Source path is not set.",
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

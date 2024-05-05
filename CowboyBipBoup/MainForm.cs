@@ -4,9 +4,13 @@ namespace CowboyBipBoup
 {
     public partial class MainForm : Form
     {
+        private Log.Log? _log = null;
+
         public MainForm()
         {
             InitializeComponent();
+
+            //_log = new Log.Log(LogRTB);
         }
 
         private void StartBtn_Click(object sender, EventArgs e)
@@ -30,8 +34,8 @@ namespace CowboyBipBoup
             }
             else
             {
-                MessageBox.Show($"Write a xlsx full path in the text box.",
-                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _log?.Error($"[MainForm]\n" +
+                    $"Write a xlsx full path in the text box.");
             }
         }
     }

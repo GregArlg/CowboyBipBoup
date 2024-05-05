@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using static System.Windows.Forms.DataFormats;
-
-namespace CowboyBipBoup.Model
+﻿namespace CowboyBipBoup.Model
 {
     public class ManagerCowboy : IDisposable
     {
         public string? SourcePath { get; set; } = null;
         public List<FolderCowboy> FolderCowboys { get; set; } = new List<FolderCowboy>();
+
+        private Log.Log? _log = null;
+
+        public ManagerCowboy(Log.Log? log = null)
+        {
+            _log = log;
+        }
 
         /// <summary>
         /// Concatenate serialized infos to build each full file name
@@ -33,7 +32,7 @@ namespace CowboyBipBoup.Model
                     string fullOutput = fileOut + folderOut;
 
                     //set property
-                    file.Output = fullOutput; 
+                    file.Output = fullOutput;
                 });
             });
         }
@@ -70,26 +69,23 @@ namespace CowboyBipBoup.Model
                             }
                             else
                             {
-                                MessageBox.Show($"[ManagerCowboy][Rename]\n\n" +
-                                    $"File doesn't exist:\n{oldPath}",
-                                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                _log?.Error($"[ManagerCowboy][Rename]\n" +
+                                    $"File doesn't exist:\n{oldPath}");
                             }
                         }
                         else
                         {
-                            MessageBox.Show($"[ManagerCowboy][Rename]\n\n" +
-                                $"File name is too long:\n{oldPath}\n\n" +
-                                $"Max number of character: {maxNumberOfChar}",
-                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            _log?.Error($"[ManagerCowboy][Rename]\n" +
+                                $"File name is too long:\n{oldPath}\n" +
+                                $"Max number of character: {maxNumberOfChar}");
                         }
                     });
-                }); 
+                });
             }
             else
             {
-                MessageBox.Show($"[ManagerCowboy][Rename]\n\n" +
-                    $"Source path is not set.",
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _log?.Error($"[ManagerCowboy][Rename]\n" +
+                    $"Source path is not set.");
             }
         }
 

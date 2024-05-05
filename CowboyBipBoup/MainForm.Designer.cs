@@ -41,7 +41,7 @@
             SpikePic.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             SpikePic.Image = Properties.Resources.SpikeNeg;
             SpikePic.ImageLocation = "";
-            SpikePic.Location = new Point(495, 62);
+            SpikePic.Location = new Point(494, 64);
             SpikePic.Name = "SpikePic";
             SpikePic.Size = new Size(170, 170);
             SpikePic.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -81,7 +81,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Black;
-            ClientSize = new Size(663, 231);
+            ClientSize = new Size(662, 233);
             Controls.Add(StartBtn);
             Controls.Add(InputLabel);
             Controls.Add(InputTextBox);
@@ -89,6 +89,7 @@
             ForeColor = Color.White;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
+            MinimumSize = new Size(680, 280);
             Name = "MainForm";
             Text = "CowboyBipBoup";
             ((System.ComponentModel.ISupportInitialize)SpikePic).EndInit();

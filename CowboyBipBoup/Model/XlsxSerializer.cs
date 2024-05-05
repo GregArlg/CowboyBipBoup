@@ -11,7 +11,7 @@ namespace CowboyBipBoup.Model
         /// <param name="xlsxPath">Full path of the excel file to serialize</param>
         /// <param name="isValid">True if the seriali</param>
         /// <returns></returns>
-        public static bool GetData(string xlsxPath, out ManagerCowboy managerCB)
+        public static bool GetData(string xlsxPath, out ManagerCowboy managerCB, Log.Log? log = null)
         {
             bool result = false;
 
@@ -102,16 +102,18 @@ namespace CowboyBipBoup.Model
                     }
                     else
                     {
-                        MessageBox.Show($"[XlsxSerializer][GetData]\nMetadata source path doesn't exist.\nSheet: {metadataSheet.Name}\nCell: {sourcePathCell}",
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        log?.Error($"[XlsxSerializer][GetData]\n" +
+                            $"Metadata source path doesn't exist.\n" +
+                            $"Sheet: {metadataSheet.Name}\nCell: {sourcePathCell}");
                     }
                 }
                 
             }
             else
             {
-                MessageBox.Show($"[XlsxSerializer][GetData]\nXlsx source file doesn't exist.\nGiven Path: {xlsxPath}",
-                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                log?.Error($"[XlsxSerializer][GetData]\n" +
+                    $"Xlsx source file doesn't exist.\n" +
+                    $"Given Path: {xlsxPath}");
             }
 
             return result;

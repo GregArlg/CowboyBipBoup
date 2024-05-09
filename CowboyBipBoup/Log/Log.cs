@@ -22,7 +22,7 @@ namespace CowboyBipBoup.Log
         {
             if (m_valid)
             {
-                m_textBox.AppendText(txt + "\n");
+                m_textBox.AppendText("> " + txt + "\n");
             }
         }
 
@@ -34,7 +34,7 @@ namespace CowboyBipBoup.Log
                 m_textBox.SelectionLength = 0;
 
                 m_textBox.SelectionColor = Color.Red;
-                m_textBox.AppendText(txt + "\n");
+                m_textBox.AppendText("> " + txt + "\n");
                 m_textBox.SelectionColor = m_textBox.ForeColor;
             }
         }
@@ -47,7 +47,7 @@ namespace CowboyBipBoup.Log
                 m_textBox.SelectionLength = 0;
 
                 m_textBox.SelectionColor = Color.Orange;
-                m_textBox.AppendText(txt + "\n");
+                m_textBox.AppendText("> " + txt + "\n");
                 m_textBox.SelectionColor = m_textBox.ForeColor;
             }
         }
@@ -60,7 +60,7 @@ namespace CowboyBipBoup.Log
                 m_textBox.SelectionLength = 0;
 
                 m_textBox.SelectionColor = Color.Green;
-                m_textBox.AppendText(txt + "\n");
+                m_textBox.AppendText("> " + txt + "\n");
                 m_textBox.SelectionColor = m_textBox.ForeColor;
             }
         }

@@ -16,7 +16,7 @@ namespace CowboyBipBoup.Model
             bool result = false;
 
             //init manager
-            managerCB = new ManagerCowboy();
+            managerCB = new ManagerCowboy(log);
 
             if (File.Exists(xlsxPath))
             {

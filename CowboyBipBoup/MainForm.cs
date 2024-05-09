@@ -10,7 +10,7 @@ namespace CowboyBipBoup
         {
             InitializeComponent();
 
-            //_log = new Log.Log(LogRTB);
+            _log = new Log.Log(LogRTB);
         }
 
         private void StartBtn_Click(object sender, EventArgs e)
@@ -21,7 +21,7 @@ namespace CowboyBipBoup
             {
                 ManagerCowboy managerCB;
 
-                bool isDataValid = XlsxSerializer.GetData(inputPath, out managerCB);
+                bool isDataValid = XlsxSerializer.GetData(inputPath, out managerCB, _log);
 
                 if (isDataValid)
                 {

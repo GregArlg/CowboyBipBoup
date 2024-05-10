@@ -27,7 +27,7 @@ namespace CowboyBipBoup
                 {
                     managerCB.SetFileOutputName();
 
-                    managerCB.Rename();
+                    managerCB.RenameAndMove(false);
                 }
 
                 managerCB.Dispose();

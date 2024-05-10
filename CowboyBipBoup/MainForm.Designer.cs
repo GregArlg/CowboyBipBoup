@@ -153,7 +153,6 @@
         private Label InputLabel;
         private Button StartBtn;
         private TableLayoutPanel MainTableLayoutPanel;
-        private GroupBox UserControlsGB;
         private Panel UserControlsPanel;
         private RichTextBox LogRTB;
     }

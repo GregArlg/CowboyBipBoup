@@ -24,7 +24,7 @@ namespace CowboyBipBoup.Model
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
                 //import excel
-                using (ExcelPackage package =  new ExcelPackage(xlsxPath))
+                using (ExcelPackage package = new ExcelPackage(xlsxPath))
                 {
                     ExcelWorkbook excelFile = package.Workbook;
 
@@ -32,10 +32,30 @@ namespace CowboyBipBoup.Model
                     var metadataSheet = excelFile.Worksheets[0];
                     string sourcePathCell = "A2";
                     managerCB.SourcePath = metadataSheet.Cells[sourcePathCell].Value.ToString();
+                    string outputPathCell = "B2";
+                    managerCB.OutputPath = metadataSheet.Cells[outputPathCell].Value.ToString();
 #if DEBUG
                     //DEBUG
-                    managerCB.SourcePath = @"D:\Coding\CowboyBipBoup__Backlog\test\a trier"; 
+                    managerCB.SourcePath = @"D:\Coding\CowboyBipBoup__Backlog\test\a trier";
+                    managerCB.OutputPath = @"D:\Coding\CowboyBipBoup__Backlog\test\Move_To_UCS";
 #endif
+
+                    //get UCS columns
+                    var ucsSheet = excelFile.Worksheets[1];
+                    //TODO: MIGHT DO THESE LOOPS IN MULTITHREADING
+                    foreach (var cell in ucsSheet.Cells["A2:A754"])
+                    {
+                        managerCB.UCSDict["Cat"].Add(cell.Text);
+                    }
+                    foreach (var cell in ucsSheet.Cells["B2:B754"])
+                    {
+                        managerCB.UCSDict["SubCat"].Add(cell.Text);
+                    }
+                    foreach (var cell in ucsSheet.Cells["C2:C754"])
+                    {
+                        managerCB.UCSDict["CatID"].Add(cell.Text);
+                    }
+
                     if (Directory.Exists(managerCB.SourcePath))
                     {
                         //select only folder sheets
@@ -90,7 +110,7 @@ namespace CowboyBipBoup.Model
                                     fileCB.Desc = fileRow.Range.GetCellValue<string>(3) ?? fileCB.Desc;
 
                                     //add file object to folder list
-                                    folderCB.FileCowboys.Add(fileCB); 
+                                    folderCB.FileCowboys.Add(fileCB);
                                 }
                             }
 
@@ -107,7 +127,7 @@ namespace CowboyBipBoup.Model
                             $"Sheet: {metadataSheet.Name}\nCell: {sourcePathCell}");
                     }
                 }
-                
+
             }
             else
             {

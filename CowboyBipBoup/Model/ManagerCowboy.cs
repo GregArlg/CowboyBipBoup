@@ -3,7 +3,8 @@
     public class ManagerCowboy : IDisposable
     {
         public string? SourcePath { get; set; } = null;
-        public string? OutputPath { get; set; } = null;
+        public string? OutputUCSPath { get; set; } = null;
+        public string? OutputMemoryPath { get; set; } = null;
         public Dictionary<string, List<string>> UCSDict { get; set; }
         public List<FolderCowboy> FolderCowboys { get; set; } = new List<FolderCowboy>();
 
@@ -65,96 +66,138 @@
         {
             if (!string.IsNullOrEmpty(SourcePath))
             {
-                if (!string.IsNullOrEmpty(OutputPath))
+                if (!string.IsNullOrEmpty(OutputUCSPath))
                 {
-                    //TODO: MIGHT BE DOABLE IN MULTITHREADING
-
-                    //browse folders
-                    FolderCowboys.ForEach(folder =>
+                    if (!string.IsNullOrEmpty(OutputMemoryPath))
                     {
-                        //concatenate folder path
-                        string folderFullPath = Path.Combine(SourcePath, folder.Name);
+                        //TODO: MIGHT BE DOABLE IN MULTITHREADING
 
-                        //browse files of current folder
-                        folder.FileCowboys.ForEach(file =>
+                        //browse folders
+                        FolderCowboys.ForEach(folder =>
                         {
-                            //build ucs folder output
+                            //concatenate folder path
+                            string folderFullPath = Path.Combine(SourcePath, folder.Name);
 
-                            //get matching categories to organize folders
-                            int ucsIdx = UCSDict["CatID"].FindIndex(cat => cat == file.Category);
-                            if (ucsIdx >= 0)
+                            //browse files of current folder
+                            folder.FileCowboys.ForEach(file =>
                             {
-                                //get data from serialized dictionary
-                                string cat = UCSDict["Cat"][ucsIdx];
-                                string subcat = UCSDict["SubCat"][ucsIdx];
+                                //build ucs and memory folders output
 
-                                //concatenate ucs folder path
-                                string ucsFolderPath = Path.Combine(OutputPath, cat, subcat);
-
-                                //concatenate full file path
-
-                                //original source file
-                                string oldPath = Path.Combine(folderFullPath, file.OriginalName + ".wav");
-
-                                //rename only
-                                string renamePath = Path.Combine(folderFullPath, file.Output + ".wav");
-                                //rename and move
-                                string movePath = Path.Combine(ucsFolderPath, file.Output + ".wav");
-
-                                int maxNumberOfChar = 256;
-
-                                //do action only if name is valid
-                                if (file.Output.Length < maxNumberOfChar)
+                                //get matching categories to organize folders
+                                int ucsIdx = UCSDict["CatID"].FindIndex(cat => cat == file.Category);
+                                if (ucsIdx >= 0)
                                 {
-                                    if (File.Exists(oldPath))
-                                    {
-                                        if (doRenameOnly)
-                                        {
-                                            File.Move(oldPath, renamePath);
-                                        }
-                                        else
-                                        {
-                                            if (!File.Exists(movePath))
-                                            {
-                                                //create directory if it doesn't exist
-                                                //(CreateDirectory method tests existence itself)
-                                                Directory.CreateDirectory(ucsFolderPath);
+                                    //get data from serialized dictionary
+                                    string cat = UCSDict["Cat"][ucsIdx];
+                                    string subcat = UCSDict["SubCat"][ucsIdx];
 
-                                                File.Move(oldPath, movePath); 
+                                    //concatenate ucs folder path
+                                    string ucsFolderPath = Path.Combine(OutputUCSPath, cat + "-" + subcat);
+                                    //concatenate memory folder path
+                                    string memoryFolderPath = Path.Combine(OutputMemoryPath, "Memories");
+
+                                    //concatenate full file path
+
+                                    //original source file
+                                    string oldPath = Path.Combine(folderFullPath, file.OriginalName + ".wav");
+
+                                    //rename only
+                                    string renamePath = Path.Combine(folderFullPath, file.Output + ".wav");
+                                    //rename and move to ucs
+                                    string moveUcsPath = Path.Combine(ucsFolderPath, file.Output + ".wav");
+                                    //rename and move to memory
+                                    string moveMemoryPath = Path.Combine(memoryFolderPath, file.Output + ".wav");
+
+                                    int maxNumberOfChar = 256;
+
+                                    //do action only if name is valid
+                                    if (file.Output.Length < maxNumberOfChar)
+                                    {
+                                        if (File.Exists(oldPath))
+                                        {
+                                            if (doRenameOnly)
+                                            {
+                                                File.Move(oldPath, renamePath);
                                             }
                                             else
                                             {
-                                                _log?.Error($"[ManagerCowboy][Move]\n" +
-                                                    $"File already exists:\n{movePath}" +
-                                                    $"From {folder.Name}\n" +
-                                                    $"From File: {file.OriginalName}" +
-                                                    $"\n");
+                                                //if ucs and memory true => move file in both memory and ucs
+                                                //if ucs only true => move file in ucs
+                                                //if memory only true => move file in memory folder
+
+                                                //UCS
+                                                if (file.IsUCS)
+                                                {
+                                                    if (!File.Exists(moveUcsPath))
+                                                    {
+                                                        //create directory if it doesn't exist
+                                                        //(CreateDirectory method tests existence itself)
+                                                        Directory.CreateDirectory(ucsFolderPath);
+
+                                                        File.Copy(oldPath, moveUcsPath);
+                                                    }
+                                                    else
+                                                    {
+                                                        _log?.Error($"[ManagerCowboy][Move]\n" +
+                                                            $"File already exists:\n{moveUcsPath}" +
+                                                            $"From {folder.Name}\n" +
+                                                            $"From File: {file.OriginalName}" +
+                                                            $"\n");
+                                                    }
+                                                }
+
+                                                //MEMORY
+                                                if (file.IsMemory)
+                                                {
+                                                    if (!File.Exists(moveMemoryPath))
+                                                    {
+                                                        //create directory if it doesn't exist
+                                                        //(CreateDirectory method tests existence itself)
+                                                        Directory.CreateDirectory(memoryFolderPath);
+
+                                                        File.Copy(oldPath, moveMemoryPath);
+                                                    }
+                                                    else
+                                                    {
+                                                        _log?.Error($"[ManagerCowboy][Move]\n" +
+                                                            $"File already exists:\n{moveMemoryPath}" +
+                                                            $"From {folder.Name}\n" +
+                                                            $"From File: {file.OriginalName}" +
+                                                            $"\n");
+                                                    }
+                                                }
                                             }
                                         }
-                                    }
-                                    else
-                                    {
-                                        _log?.Error($"[ManagerCowboy][Move]\n" +
-                                            $"File doesn't exist:\n{oldPath}" +
-                                            $"\n");
+                                        else
+                                        {
+                                            _log?.Error($"[ManagerCowboy][Move]\n" +
+                                                $"File doesn't exist:\n{oldPath}" +
+                                                $"\n");
+                                        }
                                     }
                                 }
-                            }
-                            else
-                            {
-                                _log?.Error($"[ManagerCowboy][Move]\n" +
-                                    $"CatID doesn't exist: {file.Category}\n" +
-                                    $"From {folder.Name}\n" +
-                                    $"From File: {file.OriginalName}" +
-                                    $"\n");
-                            }
-                        });
-                    });
+                                else
+                                {
+                                    _log?.Error($"[ManagerCowboy][Move]\n" +
+                                        $"CatID doesn't exist: {file.Category}\n" +
+                                        $"From {folder.Name}\n" +
+                                        $"From File: {file.OriginalName}" +
+                                        $"\n");
+                                }
+                            });
+                        }); 
+                    }
+                    else
+                    {
+                        _log?.Error($"[ManagerCowboy][Move]\n" +
+                            $"Memory Output path is not set." +
+                            $"\n");
+                    }
                 }
                 else
                 {
                     _log?.Error($"[ManagerCowboy][Move]\n" +
-                        $"Output path is not set." +
+                        $"UCS Output path is not set." +
                         $"\n");
                 }
             }

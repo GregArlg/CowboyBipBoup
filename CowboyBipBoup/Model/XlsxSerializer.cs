@@ -30,14 +30,17 @@ namespace CowboyBipBoup.Model
 
                     //get metadata
                     var metadataSheet = excelFile.Worksheets[0];
-                    string sourcePathCell = "A2";
+                    string sourcePathCell = "B1";
                     managerCB.SourcePath = metadataSheet.Cells[sourcePathCell].Value.ToString();
                     string outputPathCell = "B2";
-                    managerCB.OutputPath = metadataSheet.Cells[outputPathCell].Value.ToString();
+                    managerCB.OutputUCSPath = metadataSheet.Cells[outputPathCell].Value.ToString();
+                    string outputMemoryPathCell = "B3";
+                    managerCB.OutputMemoryPath = metadataSheet.Cells[outputMemoryPathCell].Value.ToString();
 #if DEBUG
                     //DEBUG
                     managerCB.SourcePath = @"D:\Coding\CowboyBipBoup__Backlog\test\a trier";
-                    managerCB.OutputPath = @"D:\Coding\CowboyBipBoup__Backlog\test\Move_To_UCS";
+                    managerCB.OutputUCSPath = @"D:\Coding\CowboyBipBoup__Backlog\test\Move_To_UCS";
+                    managerCB.OutputMemoryPath = @"D:\Coding\CowboyBipBoup__Backlog\test\Move_To_Memory";
 #endif
 
                     //get UCS columns
@@ -94,20 +97,27 @@ namespace CowboyBipBoup.Model
                             //parse original files
                             foreach (ExcelRangeRow fileRow in fileRows)
                             {
-                                // Read the report cell and get the file infos only if true
-                                bool isFileValid = fileRow.Range.GetCellValue<string>(1) == "1";
+                                // Read the report (ucs) and memory cells
+                                //if both false, do not get the file
+                                bool isFileUCS = fileRow.Range.GetCellValue<string>(1) == "1";
+                                bool isFileMemory = fileRow.Range.GetCellValue<string>(2) == "1";
 
-                                if (isFileValid)
+                                if (isFileUCS || isFileMemory)
                                 {
                                     //create file object
                                     FileCowboy fileCB = new FileCowboy();
 
                                     //get OriginalName
-                                    fileCB.OriginalName = fileRow.Range.GetCellValue<string>(0) ?? fileCB.OriginalName; ;
+                                    fileCB.OriginalName = fileRow.Range.GetCellValue<string>(0) ?? fileCB.OriginalName;
                                     //get Category
-                                    fileCB.Category = fileRow.Range.GetCellValue<string>(2) ?? fileCB.Category;
+                                    fileCB.Category = fileRow.Range.GetCellValue<string>(3) ?? fileCB.Category;
                                     //get Desc
-                                    fileCB.Desc = fileRow.Range.GetCellValue<string>(3) ?? fileCB.Desc;
+                                    fileCB.Desc = fileRow.Range.GetCellValue<string>(4) ?? fileCB.Desc;
+
+                                    //get is ucs
+                                    fileCB.IsUCS = isFileUCS;
+                                    //get is memory
+                                    fileCB.IsMemory = isFileMemory;
 
                                     //add file object to folder list
                                     folderCB.FileCowboys.Add(fileCB);

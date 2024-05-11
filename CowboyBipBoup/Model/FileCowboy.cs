@@ -14,9 +14,8 @@ namespace CowboyBipBoup.Model
         public string Category { get; set; } = "NOCAT";
         public string Desc { get; set; } = "NODESC";
 
-        // I decided to not keep unwanted files in memory
-        // because we never need them after the serialization
-        //public bool Report { get; set; } = false;
+        public bool IsUCS { get; set; } = false;
+        public bool IsMemory { get; set; } = false;
 
         public string Output { get; set; } = string.Empty;
 

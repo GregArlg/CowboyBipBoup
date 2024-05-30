@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using static System.Windows.Forms.DataFormats;
-
-namespace CowboyBipBoup.Model
+﻿namespace CowboyBipBoup.Model
 {
     public class FileCowboy : IDisposable
     {
@@ -17,11 +9,13 @@ namespace CowboyBipBoup.Model
         public bool IsUCS { get; set; } = false;
         public bool IsMemory { get; set; } = false;
 
+        public bool IsValid { get; set; } = true;
+
         public string Output { get; set; } = string.Empty;
 
         public void Dispose()
         {
-            
+
         }
     }
 }

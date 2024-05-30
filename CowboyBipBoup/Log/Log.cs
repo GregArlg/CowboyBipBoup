@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CowboyBipBoup.Log
+﻿namespace CowboyBipBoup.Log
 {
     public class Log
     {
@@ -20,6 +14,16 @@ namespace CowboyBipBoup.Log
 
         public void Message(string txt)
         {
+            if (m_textBox.InvokeRequired)
+            {
+                m_textBox.Invoke(delegate
+                {
+                    Message(txt);
+                });
+
+                return;
+            }
+
             if (m_valid)
             {
                 m_textBox.AppendText("> " + txt + "\n");
@@ -28,6 +32,16 @@ namespace CowboyBipBoup.Log
 
         public void Error(string txt)
         {
+            if (m_textBox.InvokeRequired)
+            {
+                m_textBox.Invoke(delegate
+                {
+                    Error(txt);
+                });
+
+                return;
+            }
+
             if (m_valid)
             {
                 m_textBox.SelectionStart = m_textBox.TextLength;
@@ -41,6 +55,16 @@ namespace CowboyBipBoup.Log
 
         public void Warning(string txt)
         {
+            if (m_textBox.InvokeRequired)
+            {
+                m_textBox.Invoke(delegate
+                {
+                    Warning(txt);
+                });
+
+                return;
+            }
+
             if (m_valid)
             {
                 m_textBox.SelectionStart = m_textBox.TextLength;
@@ -54,6 +78,16 @@ namespace CowboyBipBoup.Log
 
         public void Valid(string txt)
         {
+            if (m_textBox.InvokeRequired)
+            {
+                m_textBox.Invoke(delegate
+                {
+                    Valid(txt);
+                });
+
+                return;
+            }
+
             if (m_valid)
             {
                 m_textBox.SelectionStart = m_textBox.TextLength;

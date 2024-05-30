@@ -27,6 +27,8 @@
         /// </summary>
         public void SetFileOutputName()
         {
+            _log?.Message("Building file names ...");
+
             //browse folders
             FolderCowboys.ForEach(folder =>
             {
@@ -37,7 +39,15 @@
                 folder.FileCowboys.ForEach(file =>
                 {
                     //concatenate file infos
-                    string fileOut = $"{file.Category}_{file.Desc} ";
+                    string fileOut = "";
+                    if (file.IsUCS)
+                    {
+                        fileOut = $"{file.Category}_{file.Desc} ";
+                    }
+                    else if (file.IsMemory)
+                    {
+                        fileOut = $"{file.Desc} ";
+                    }
                     //concatenate full name
                     string fullOutput = fileOut + folderOut;
 
@@ -52,9 +62,13 @@
                             $"File name is too long ({folder.Name}):\n{file.Output}\n" +
                             $"Max number of character: {maxNumberOfChar}" +
                             $"\n");
+
+                        file.IsValid = false;
                     }
                 });
             });
+
+            _log?.Valid("File names are set!");
         }
 
         /// <summary>
@@ -64,6 +78,11 @@
         /// <param name="doRenameOnly"></param>
         public void RenameAndMove(bool doRenameOnly = false)
         {
+            if (doRenameOnly)
+                _log?.Message("Renaming files ...");
+            else
+                _log?.Message("Renaming and Moving files ...");
+
             if (!string.IsNullOrEmpty(SourcePath))
             {
                 if (!string.IsNullOrEmpty(OutputUCSPath))
@@ -81,53 +100,72 @@
                             //browse files of current folder
                             folder.FileCowboys.ForEach(file =>
                             {
-                                //build ucs and memory folders output
+                                //original source file
+                                string oldPath = Path.Combine(folderFullPath, file.OriginalName + ".wav");
 
-                                //get matching categories to organize folders
-                                int ucsIdx = UCSDict["CatID"].FindIndex(cat => cat == file.Category);
-                                if (ucsIdx >= 0)
+                                if (file.IsValid)
                                 {
-                                    //get data from serialized dictionary
-                                    string cat = UCSDict["Cat"][ucsIdx];
-                                    string subcat = UCSDict["SubCat"][ucsIdx];
-
-                                    //concatenate ucs folder path
-                                    string ucsFolderPath = Path.Combine(OutputUCSPath, cat + "-" + subcat);
-                                    //concatenate memory folder path
-                                    string memoryFolderPath = Path.Combine(OutputMemoryPath, "Memories");
-
-                                    //concatenate full file path
-
-                                    //original source file
-                                    string oldPath = Path.Combine(folderFullPath, file.OriginalName + ".wav");
-
-                                    //rename only
-                                    string renamePath = Path.Combine(folderFullPath, file.Output + ".wav");
-                                    //rename and move to ucs
-                                    string moveUcsPath = Path.Combine(ucsFolderPath, file.Output + ".wav");
-                                    //rename and move to memory
-                                    string moveMemoryPath = Path.Combine(memoryFolderPath, file.Output + ".wav");
-
-                                    int maxNumberOfChar = 256;
-
-                                    //do action only if name is valid
-                                    if (file.Output.Length < maxNumberOfChar)
+                                    if (File.Exists(oldPath))
                                     {
-                                        if (File.Exists(oldPath))
+                                        //first manage rename only case
+                                        if (doRenameOnly)
                                         {
-                                            if (doRenameOnly)
-                                            {
-                                                File.Move(oldPath, renamePath);
-                                            }
-                                            else
-                                            {
-                                                //if ucs and memory true => move file in both memory and ucs
-                                                //if ucs only true => move file in ucs
-                                                //if memory only true => move file in memory folder
+                                            //rename only
+                                            string renamePath = Path.Combine(folderFullPath, file.Output + ".wav");
 
-                                                //UCS
-                                                if (file.IsUCS)
+                                            File.Move(oldPath, renamePath);
+                                        }
+                                        else
+                                        {
+                                            //if ucs and memory true => move file in both memory and ucs
+                                            //if ucs only true => move file in ucs
+                                            //if memory only true => move file in memory folder
+
+
+                                            //move file to memory folder if needed
+                                            if (file.IsMemory)
+                                            {
+                                                //concatenate memory folder path
+                                                string memoryFolderPath = Path.Combine(OutputMemoryPath, "Memories");
+
+                                                //destination memory full file path
+                                                string moveMemoryPath = Path.Combine(memoryFolderPath, file.Output + ".wav");
+
+                                                if (!File.Exists(moveMemoryPath))
                                                 {
+                                                    //create directory if it doesn't exist
+                                                    //(CreateDirectory method tests existence itself)
+                                                    Directory.CreateDirectory(memoryFolderPath);
+
+                                                    File.Copy(oldPath, moveMemoryPath);
+                                                }
+                                                else
+                                                {
+                                                    _log?.Error($"[ManagerCowboy][Move]\n" +
+                                                        $"File already exists:\n{moveMemoryPath}" +
+                                                        $"From {folder.Name}\n" +
+                                                        $"From File: {file.OriginalName}" +
+                                                        $"\n");
+                                                }
+                                            }
+
+                                            //move file to ucs folder if needed
+                                            if (file.IsUCS)
+                                            {
+                                                //get matching categories to organize folders
+                                                int ucsIdx = UCSDict["CatID"].FindIndex(cat => cat == file.Category);
+                                                if (ucsIdx >= 0)
+                                                {
+                                                    //get data from serialized dictionary
+                                                    string cat = UCSDict["Cat"][ucsIdx];
+                                                    string subcat = UCSDict["SubCat"][ucsIdx];
+
+                                                    //concatenate ucs folder path
+                                                    string ucsFolderPath = Path.Combine(OutputUCSPath, cat + "-" + subcat);
+
+                                                    //destination ucs full file path
+                                                    string moveUcsPath = Path.Combine(ucsFolderPath, file.Output + ".wav");
+
                                                     if (!File.Exists(moveUcsPath))
                                                     {
                                                         //create directory if it doesn't exist
@@ -145,47 +183,31 @@
                                                             $"\n");
                                                     }
                                                 }
-
-                                                //MEMORY
-                                                if (file.IsMemory)
+                                                else
                                                 {
-                                                    if (!File.Exists(moveMemoryPath))
-                                                    {
-                                                        //create directory if it doesn't exist
-                                                        //(CreateDirectory method tests existence itself)
-                                                        Directory.CreateDirectory(memoryFolderPath);
-
-                                                        File.Copy(oldPath, moveMemoryPath);
-                                                    }
-                                                    else
-                                                    {
-                                                        _log?.Error($"[ManagerCowboy][Move]\n" +
-                                                            $"File already exists:\n{moveMemoryPath}" +
-                                                            $"From {folder.Name}\n" +
-                                                            $"From File: {file.OriginalName}" +
-                                                            $"\n");
-                                                    }
+                                                    _log?.Error($"[ManagerCowboy][Move]\n" +
+                                                        $"CatID doesn't exist: {file.Category}\n" +
+                                                        $"From {folder.Name}\n" +
+                                                        $"From File: {file.OriginalName}" +
+                                                        $"\n");
                                                 }
                                             }
                                         }
-                                        else
-                                        {
-                                            _log?.Error($"[ManagerCowboy][Move]\n" +
-                                                $"File doesn't exist:\n{oldPath}" +
-                                                $"\n");
-                                        }
+                                    }
+                                    else
+                                    {
+                                        _log?.Error($"[ManagerCowboy][Move]\n" +
+                                            $"File doesn't exist:\n{oldPath}" +
+                                            $"\n");
                                     }
                                 }
-                                else
-                                {
-                                    _log?.Error($"[ManagerCowboy][Move]\n" +
-                                        $"CatID doesn't exist: {file.Category}\n" +
-                                        $"From {folder.Name}\n" +
-                                        $"From File: {file.OriginalName}" +
-                                        $"\n");
-                                }
                             });
-                        }); 
+                        });
+
+                        if (doRenameOnly)
+                            _log?.Valid("Files name changed!");
+                        else
+                            _log?.Valid("Files name changed and moved!");
                     }
                     else
                     {

@@ -13,6 +13,8 @@ namespace CowboyBipBoup.Model
         /// <returns></returns>
         public static bool GetData(string xlsxPath, out ManagerCowboy managerCB, Log.Log? log = null)
         {
+            log?.Message("Serializing data from xlsx ...");
+
             bool result = false;
 
             //init manager
@@ -73,24 +75,34 @@ namespace CowboyBipBoup.Model
                             //get folder name
                             folderCB.Name = folderSheet.Name;
 
+                            object cellVal;
                             //get Date 
-                            folderCB.Date = folderSheet.Cells["C2"].Value.ToString() ?? folderCB.Date;
+                            cellVal = folderSheet.Cells["C2"].Value;
+                            folderCB.Date = cellVal == null ? folderCB.Date : cellVal.ToString();
                             //get Place 
-                            folderCB.Place = folderSheet.Cells["D2"].Value.ToString() ?? folderCB.Place;
+                            cellVal = folderSheet.Cells["D2"].Value;
+                            folderCB.Place = cellVal == null ? folderCB.Place : cellVal.ToString();
                             //get MonoSte 
-                            folderCB.MonoSte = folderSheet.Cells["E2"].Value.ToString() ?? folderCB.MonoSte;
+                            cellVal = folderSheet.Cells["E2"].Value;
+                            folderCB.MonoSte = cellVal == null ? folderCB.MonoSte : cellVal.ToString();
                             //get Recorder 
-                            folderCB.Recorder = folderSheet.Cells["F2"].Value.ToString() ?? folderCB.Recorder;
+                            cellVal = folderSheet.Cells["F2"].Value;
+                            folderCB.Recorder = cellVal == null ? folderCB.Recorder : cellVal.ToString();
                             //get Micro 
-                            folderCB.Micro = folderSheet.Cells["G2"].Value.ToString() ?? folderCB.Micro;
+                            cellVal = folderSheet.Cells["G2"].Value;
+                            folderCB.Micro = cellVal == null ? folderCB.Micro : cellVal.ToString();
                             //get Format 
-                            folderCB.Format = folderSheet.Cells["H2"].Value.ToString() ?? folderCB.Format;
+                            cellVal = folderSheet.Cells["H2"].Value;
+                            folderCB.Format = cellVal == null ? folderCB.Format : cellVal.ToString();
                             //get Library 
-                            folderCB.Library = folderSheet.Cells["A2"].Value.ToString() ?? folderCB.Library;
+                            cellVal = folderSheet.Cells["A2"].Value;
+                            folderCB.Library = cellVal == null ? folderCB.Library : cellVal.ToString();
                             //get Project 
-                            folderCB.Project = folderSheet.Cells["B2"].Value.ToString() ?? folderCB.Project;
+                            cellVal = folderSheet.Cells["B2"].Value;
+                            folderCB.Project = cellVal == null ? folderCB.Project : cellVal.ToString();
                             //get Note 
-                            folderCB.Note = folderSheet.Cells["I2"].Value.ToString() ?? folderCB.Note;
+                            cellVal = folderSheet.Cells["I2"].Value;
+                            folderCB.Note = cellVal == null ? folderCB.Note : cellVal.ToString();
 
                             //get all file rows, from cell 4
                             var fileRows = folderSheet.Rows.Skip(3);
@@ -129,6 +141,7 @@ namespace CowboyBipBoup.Model
                         }
 
                         result = true;
+                        log?.Valid("Serialization done!");
                     }
                     else
                     {

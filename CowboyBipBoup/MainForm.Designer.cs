@@ -134,7 +134,7 @@
             LogRTB.BorderStyle = BorderStyle.None;
             LogRTB.Dock = DockStyle.Fill;
             LogRTB.Font = new Font("Consolas", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            LogRTB.ForeColor = Color.ForestGreen;
+            LogRTB.ForeColor = Color.FromArgb(224, 224, 224);
             LogRTB.Location = new Point(9, 180);
             LogRTB.Margin = new Padding(9, 0, 9, 8);
             LogRTB.Name = "LogRTB";

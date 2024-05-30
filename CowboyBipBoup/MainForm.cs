@@ -1,16 +1,18 @@
-using CowboyBipBoup.Model;
+using CowboyBipBoup.Controler;
 
 namespace CowboyBipBoup
 {
     public partial class MainForm : Form
     {
         private Log.Log? _log = null;
+        private CowboyControler _controler;
 
         public MainForm()
         {
             InitializeComponent();
 
             _log = new Log.Log(LogRTB);
+            _controler = new CowboyControler(_log);
         }
 
         private void StartBtn_Click(object sender, EventArgs e)
@@ -19,18 +21,7 @@ namespace CowboyBipBoup
 
             if (!string.IsNullOrEmpty(inputPath))
             {
-                ManagerCowboy managerCB;
-
-                bool isDataValid = XlsxSerializer.GetData(inputPath, out managerCB, _log);
-
-                if (isDataValid)
-                {
-                    managerCB.SetFileOutputName();
-
-                    managerCB.RenameAndMove(RenameOnlyCheckBox.Checked);
-                }
-
-                managerCB.Dispose();
+                _controler.Start(inputPath, RenameOnlyCheckBox.Checked, StartBtn);
             }
             else
             {

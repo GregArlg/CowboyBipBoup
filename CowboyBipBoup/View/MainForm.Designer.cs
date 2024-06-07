@@ -156,6 +156,7 @@
             MaximizeBox = false;
             MinimumSize = new Size(597, 220);
             Name = "MainForm";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "CowboyBipBoup";
             ((System.ComponentModel.ISupportInitialize)SpikePic).EndInit();
             MainTableLayoutPanel.ResumeLayout(false);

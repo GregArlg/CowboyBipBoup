@@ -73,6 +73,25 @@ namespace CowboyBipBoup.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ed_bipboup {
+            get {
+                object obj = ResourceManager.GetObject("ed_bipboup", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream modem {
+            get {
+                return ResourceManager.GetStream("modem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap SpikeNeg {
             get {
                 object obj = ResourceManager.GetObject("SpikeNeg", resourceCulture);

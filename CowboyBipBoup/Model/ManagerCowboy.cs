@@ -95,7 +95,9 @@
                         FolderCowboys.ForEach(folder =>
                         {
                             //concatenate folder path
+#pragma warning disable CS8604 // Possible null reference argument.
                             string folderFullPath = Path.Combine(SourcePath, folder.Name);
+#pragma warning restore CS8604 // Possible null reference argument.
 
                             //browse files of current folder
                             folder.FileCowboys.ForEach(file =>

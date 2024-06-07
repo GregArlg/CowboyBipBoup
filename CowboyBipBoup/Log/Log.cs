@@ -14,6 +14,7 @@
 
         public void Message(string txt)
         {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             if (m_textBox.InvokeRequired)
             {
                 m_textBox.Invoke(delegate
@@ -23,6 +24,7 @@
 
                 return;
             }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             if (m_valid)
             {
@@ -32,6 +34,7 @@
 
         public void Error(string txt)
         {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             if (m_textBox.InvokeRequired)
             {
                 m_textBox.Invoke(delegate
@@ -41,6 +44,7 @@
 
                 return;
             }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             if (m_valid)
             {
@@ -55,6 +59,7 @@
 
         public void Warning(string txt)
         {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             if (m_textBox.InvokeRequired)
             {
                 m_textBox.Invoke(delegate
@@ -64,6 +69,7 @@
 
                 return;
             }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             if (m_valid)
             {
@@ -78,6 +84,7 @@
 
         public void Valid(string txt)
         {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             if (m_textBox.InvokeRequired)
             {
                 m_textBox.Invoke(delegate
@@ -87,6 +94,7 @@
 
                 return;
             }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             if (m_valid)
             {

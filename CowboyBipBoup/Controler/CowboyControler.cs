@@ -1,4 +1,5 @@
 ﻿using CowboyBipBoup.Model;
+using CowboyBipBoup.View;
 
 namespace CowboyBipBoup.Controler
 {
@@ -13,6 +14,9 @@ namespace CowboyBipBoup.Controler
 
         public void Start(string inputPath, bool isRenameOnly, Control toDisable)
         {
+            LoadingScreen loadingScreen = new LoadingScreen();
+            loadingScreen.Show();
+
             Task.Run(() =>
             {
                 toDisable.Invoke(delegate { toDisable.Enabled = false; });
@@ -21,6 +25,7 @@ namespace CowboyBipBoup.Controler
 
                 toDisable.Invoke(delegate { toDisable.Enabled = true; });
             });
+
         }
 
         private void _ProcessLauncher(string inputPath, bool isRenameOnly)

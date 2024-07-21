@@ -109,6 +109,9 @@
                                 {
                                     if (File.Exists(oldPath))
                                     {
+                                        //will contain the file path to edit metadata
+                                        string metadataPath = "";
+
                                         //first manage rename only case
                                         if (doRenameOnly)
                                         {
@@ -116,6 +119,9 @@
                                             string renamePath = Path.Combine(folderFullPath, file.Output + ".wav");
 
                                             File.Move(oldPath, renamePath);
+
+                                            //then set metadata, we edit metadata even if we do rename only
+                                            metadataPath = renamePath;
                                         }
                                         else
                                         {
@@ -140,6 +146,9 @@
                                                     Directory.CreateDirectory(memoryFolderPath);
 
                                                     File.Copy(oldPath, moveMemoryPath);
+
+                                                    //set metadata path
+                                                    metadataPath = moveMemoryPath;
                                                 }
                                                 else
                                                 {
@@ -175,6 +184,9 @@
                                                         Directory.CreateDirectory(ucsFolderPath);
 
                                                         File.Copy(oldPath, moveUcsPath);
+
+                                                        //set metadata path
+                                                        metadataPath = moveUcsPath;
                                                     }
                                                     else
                                                     {
@@ -194,6 +206,13 @@
                                                         $"\n");
                                                 }
                                             }
+                                        }
+
+                                        //now edit metadata if the file has been renamed or modified
+
+                                        if (!string.IsNullOrWhiteSpace(metadataPath))
+                                        {
+                                            MetadataEditor.Wav(metadataPath, folder, file, _log);
                                         }
                                     }
                                     else

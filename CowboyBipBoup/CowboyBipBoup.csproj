@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="EPPlus" Version="7.1.2" />
+    <PackageReference Include="GroupDocs.Metadata" Version="24.6.0" />
   </ItemGroup>
 
   <ItemGroup>
